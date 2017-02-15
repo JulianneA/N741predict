@@ -1,13 +1,13 @@
 ---
 title: "Prediction & Logistic Regression"
-author: "Melinda K. Higgins, PhD."
+author: "Julianne Ammirati, editing code by Melinda K. Higgins, PhD."
 date: "February 13, 2017"
 output:
   word_document: default
   pdf_document: default
   html_document: default
 ---
-
+This project utilizes data from the course textbook.
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -75,7 +75,7 @@ When using the `glm()` to fit a "General Linear Model", you need to know which "
 
 ```
 binomial(link = "logit")
-gaussian(link = "identity")
+gaussian(link = "identity") 
 Gamma(link = "inverse")
 inverse.gaussian(link = "1/mu^2")
 poisson(link = "log")
@@ -83,6 +83,8 @@ quasi(link = "identity", variance = "constant")
 quasibinomial(link = "logit")
 quasipoisson(link = "log")
 ```
+
+### Use poisson(link = "log") for count data! 
 
 _NOTE: If we use `gaussian(link = "identity")` family with the `glm()` function, we're essentially fitting a "normal" linear regression model._
 
@@ -97,12 +99,12 @@ Use the following code chunk to define the predictors (`x`'s) and outcome variab
 y <- "atRisk"
 
 # define the input variable list
-x <- names(sdata[,1:12])
+x <- names(sdata[,1:12]) #lists the predictors
 
 # use the paste() command to put a + in between
 # each of the x variables and put the ~ in between the
 # outcome y and the x variables
-fmla <- paste(y, paste(x, collapse="+"), sep="~")
+fmla <- paste(y, paste(x, collapse="+"), sep="~") #FORMULA is y=every variable added together.
 ```
 
 The final model formula is  `r fmla`
@@ -118,6 +120,8 @@ model <- glm(fmla,
 ```
 
 ## Model summary
+
+* For every change in the predictor, we are not changing your risk, but your odds of risk (more odds ratio, not risk itself).
 
 ```{r}
 summary(model)
@@ -241,7 +245,7 @@ precision <- ctab.test[2,2]/sum(ctab.test[2,])
 # compute recall = true positives / actual true
 recall <- ctab.test[2,2]/sum(ctab.test[,2])
 ```
-
+ [java stat contingency table](http://statpages.info/ctab2x2.html)
 This classifier is low-precision with a precision = `r round(precision*100,2)` % and recall of `r round(recall*100,2)` %.
 
 ### Threshold = 0.01
@@ -283,6 +287,8 @@ This classifier is low-precision with a precision = `r round(precision*100,2)` %
 ## The "Concordance" or "C"-statistic (e.g. AUC for the ROC)
 
 The "concordance" or "c"-statistic is the "area under the curve" for the receiver operating curve (ROC). This curve is a plot of the tradeoffs between the false positive rate and true positive rate across a range of threshold probabilities. For this we'll use the `ROCR` package.
+
+* If false positive rate is equal to true positive rate, the line would be straight and your prediction is no better than a coin flip.
 
 ```{r}
 library(ROCR)
